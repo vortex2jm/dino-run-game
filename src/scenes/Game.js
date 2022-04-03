@@ -1,7 +1,8 @@
 import Phaser from '../lib/phaser.js'
 
-export default class Game extends Phaser.Scene {
+// export var velocity;
 
+export default class Game extends Phaser.Scene {
 
     constructor() {
         super('game');
@@ -9,7 +10,8 @@ export default class Game extends Phaser.Scene {
 
     init() {
         this.score = 0;
-        this.velo = 0.15;
+        // velocity = 0.15;
+        
     }
 
     preload() {
@@ -18,28 +20,26 @@ export default class Game extends Phaser.Scene {
         this.load.image('background', './src/sprites/images/background2.png');
         this.load.image('platform', './src/sprites/images/gassPlatform.jpg');
         this.load.image('button', './src/sprites/images/playPause.png');
-        this.load.spritesheet('dino', './src/sprites/images/spritesheet.png', {
-            frameWidth: 460,
-            frameHeight: 410
-        });
-
+        this.load.spritesheet('dino', './src/sprites/images/spritesheet.png', {frameWidth: 460, frameHeight: 410});
         
         this.keys = this.input.keyboard.createCursorKeys();
     }
     
     create() {
 
+        this.velocity = 0.15;
+
         const {width , height} = this.scale;
         const style = { color: '#000', fontSize: 24 };
 
         //adding background
-        this.background = this.add.tileSprite(500, 250, width, height, 'background');
+        this.background = this.add.tileSprite(width/2, height/2, width, height, 'background');
 
         //adding dino
-        this.dino = this.physics.add.sprite(200, 250, 'dino').setScale(0.3);
+        this.dino = this.physics.add.sprite(200, height/2, 'dino').setScale(0.3);
         
         //adding plattform
-        this.platform = this.add.tileSprite(500, 400, width, 80, 'platform');
+        this.platform = this.add.tileSprite(width/2, 400, width, 80, 'platform');
         this.physics.add.existing(this.platform, true);
         
         //adding colision
@@ -50,17 +50,12 @@ export default class Game extends Phaser.Scene {
             .setScrollFactor(0)
             .setOrigin(0.5, 0);    
         
+
         //adding buttons
         const playPauseButton = this.add.image(85,70, 'button').setScale(0.03).setInteractive();
         //animating and creating actions on buttons
-        playPauseButton.on('pointerover', () => {
-
-            playPauseButton.setScale(0.04);
-        })
-        playPauseButton.on('pointerout', () => {
-
-            playPauseButton.setScale(0.03);
-        })
+        playPauseButton.on('pointerover', () => {playPauseButton.setScale(0.04);})
+        playPauseButton.on('pointerout', () => {playPauseButton.setScale(0.03);})
         playPauseButton.on('pointerdown', () => {
 
             this.scene.launch('pause');
@@ -83,15 +78,16 @@ export default class Game extends Phaser.Scene {
             frameRate: 15,
             repeat: 1
         })
+
     }
 
-    update(time) {
+    update(i) {
 
         //moving background
-        this.background.tilePositionX = time * this.velo;
+        this.background.tilePositionX = i * this.velocity;
 
         //moving platform
-        this.platform.tilePositionX = time * this.velo * 2;
+        this.platform.tilePositionX = i * 2 * this.velocity;
 
         //animating dino
         const touchingDown = this.dino.body.touching.down;
@@ -122,11 +118,13 @@ export default class Game extends Phaser.Scene {
 
     updateScore() {
         this.score++;
-        this.scoreText.text = `Score: ${this.score}`;
+        this.scoreText.text = `Score: ${this.score} and velo: ${this.velocity}`;
     }
 
     updateVelo() {
 
-        this.velo += 0.00001;
+        this.velocity += 0.001;
+        // velocity += 0.001;
     }
+
 }

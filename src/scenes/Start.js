@@ -6,49 +6,78 @@ export default class Start extends Phaser.Scene {
         super('start');
     }
 
+    init(){};
+
     preload() {
-        /* fazendo o carregamento das imagens */
-        this.load.image('dinoRun', './src/sprites/images/dinoRun.png');
+       
+        // this.load.image('dinoRun', './src/sprites/images/dinoRun.png');
         this.load.image('spaceButton', './src/sprites/images/spaceRed.png');
         this.load.image('background','./src/sprites/images/background2.png');
-        
-        /* fazendo o carregamento dos sons */
+        this.load.spritesheet('dinoRun','./src/sprites/images/spritesheet.png',{frameWidth: 460, frameHeight:410});
+        this.load.image('menu', './src/sprites/images/menu.png');
+
         this.load.audio('startMusic', './src/sprites/sounds/startMusic.mp3');
     }
 
     create() {
-        const width = this.scale.width; // largura do jogo
-        const height = this.scale.height; // altura do jogo
-        const style = {
-            color: '#000000',
-            fontSize: 24
-        };
 
-        /* adcionando as imagens carregadas */
-        this.add.image(500, 250, 'background');
-        this.add.image(500, 300, 'dinoRun').setScale(0.4);
-        this.button = this.add.image(500, 125 , 'spaceButton')
-        .setScale(0.5); 
-
-        /* adicionando a musica inicial */
+        //standard data
+        const {width, height} = this.scale; 
+        const style = { color: '#000000',fontSize: 24 };
+        
+        //playing music
         this.sound.play('startMusic');
 
-        /* adicionando a frase na tela */
-        this.add.text(500, 50, 'Press SPACE to start', style)
-            .setOrigin(0.5);
+        //adding background
+        this.add.image(width/2, height/2, 'background');
 
-        /* se apertar espaço inicia a cena principal (Game) */
-        this.input.keyboard.once('keydown-SPACE', () => {
-            this.sound.stopAll(); // parar a música inicial
+        //adding dino spritesheet and creating animation
+        this.dino = this.add.sprite(width/2, 300, 'dinoRun').setScale(0.4);
+        this.anims.create({
+
+            key: 'run',
+            frames: this.anims.generateFrameNumbers('dinoRun', {start: 0, end: 7}),
+            frameRate: 12,
+            repeat: -1
+        })
+
+        //creating button
+        const spaceButton = this.add.image(width/2, 125 , 'spaceButton').setScale(0.45).setInteractive();
+        spaceButton.on('pointerdown', () => {
+
+            this.sound.stopAll();
             this.scene.start('game');
         })
 
+        const menu = this.add.image(70,430,'menu').setScale(0.15).setInteractive();
+        menu.on('pointerover', () => {menu.setScale(0.2)});
+        menu.on('pointerout', () => {menu.setScale(0.15)});
+        menu.on('pointerdown', () => {this.scene.stop(), this.scene.start('menu')});
+        
+
+
+        //adding text
+        this.add.text(500, 50, 'Press SPACE to start', style).setOrigin(0.5);
+
+        //intializing game by keyboard
+        this.input.keyboard.once('keydown-SPACE', () => {
+            this.sound.stopAll(); 
+            this.scene.start('game');
+        })
+
+        //button animation
         setInterval(()=>{
 
-            if(this.button.scale == (0.45)) this.button.setScale(0.4);
-            else this.button.setScale(0.45);
+            if(spaceButton.scale == (0.45)) spaceButton.setScale(0.4);
+            else spaceButton.setScale(0.45);
+
         },500);
     }
 
-    update(){};
+
+    update(){
+
+        //running dino animation
+        this.dino.anims.play("run", true);
+    };
 }
