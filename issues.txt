@@ -1,2 +1,0 @@
-
-1 -> Background speed is not reseting when 'game' scene restarts.

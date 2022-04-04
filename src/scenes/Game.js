@@ -1,7 +1,5 @@
 import Phaser from '../lib/phaser.js'
 
-// export var velocity;
-
 export default class Game extends Phaser.Scene {
 
     constructor() {
@@ -9,9 +7,13 @@ export default class Game extends Phaser.Scene {
     }
 
     init() {
+
         this.score = 0;
-        // velocity = 0.15;
-        
+        this.velocity = 1;
+        this.velocity2 = 1;
+        this.obstacleExists = false;
+        this.cactusVelocity = -400;
+        this.obstaclesArray = ['cactus', 'cactus2', 'cactus3'];
     }
 
     preload() {
@@ -21,14 +23,14 @@ export default class Game extends Phaser.Scene {
         this.load.image('platform', './src/sprites/images/gassPlatform.jpg');
         this.load.image('button', './src/sprites/images/playPause.png');
         this.load.spritesheet('dino', './src/sprites/images/spritesheet.png', {frameWidth: 460, frameHeight: 410});
-        
+        this.load.image('cactus', './src/sprites/images/cactus1.png');
+
         this.keys = this.input.keyboard.createCursorKeys();
     }
     
     create() {
 
-        this.velocity = 0.15;
-
+        
         const {width , height} = this.scale;
         const style = { color: '#000', fontSize: 24 };
 
@@ -79,15 +81,21 @@ export default class Game extends Phaser.Scene {
             repeat: 1
         })
 
+        //creating obstacle group
+        this.obstaclesGroup = this.add.group();
+        this.physics.add.collider(this.platform, this.obstaclesGroup);
+        this.physics.add.collider(this.obstaclesGroup, this.dino,() => {
+            this.scene.stop();
+            this.scene.start('game_over', {score: this.score})}, undefined, this);
     }
 
-    update(i) {
+    update() {
 
         //moving background
-        this.background.tilePositionX = i * this.velocity;
-
+        this.background.tilePositionX = this.velocity * this.velocity2;
         //moving platform
-        this.platform.tilePositionX = i * 2 * this.velocity;
+        this.platform.tilePositionX = this.velocity * 2 * this.velocity2;
+
 
         //animating dino
         const touchingDown = this.dino.body.touching.down;
@@ -97,7 +105,7 @@ export default class Game extends Phaser.Scene {
 
         if(touchingDown && (kUp || kSpace)){
 
-            this.dino.setVelocityY(-500);
+            this.dino.setVelocityY(-600);
             this.dino.anims.play("jump");
         }
         else if(touchingDown){
@@ -112,19 +120,61 @@ export default class Game extends Phaser.Scene {
             this.scene.pause();
         }
         
+        //additional functions
         this.updateVelo();
         this.updateScore();
+        this.updateGroup();
     }
 
+    
     updateScore() {
         this.score++;
-        this.scoreText.text = `Score: ${this.score} and velo: ${this.velocity}`;
+        this.scoreText.text = `Score: ${this.score}`;
     }
 
     updateVelo() {
 
-        this.velocity += 0.001;
-        // velocity += 0.001;
+        this.velocity += 3;
+        this.velocity2 += 0.0001;
+        this.cactusVelocity += -0.1;
     }
 
+    updateGroup() {
+        
+        if(!this.obstacleExists){
+
+            let posXadd = Phaser.Math.Between(0,2000);
+            let rand = Phaser.Math.Between(1,2);
+
+            if(rand == 1){
+
+                this.createCactus(posXadd);
+            }
+            else if(rand == 2){
+
+                this.createCactus(posXadd);
+                this.createCactus(posXadd + 60);   
+            }
+
+            //actualizing boolean
+            this.obstacleExists = true;  
+        }
+        else{
+            
+            if(this.obstacle.x < -250){
+
+                //actualizing boolean
+                this.obstacleExists = false;
+            }   
+        }
+    }
+
+    createCactus(posXadd){
+
+        this.obstacle = this.physics.add.sprite(1000 + posXadd, 310, this.obstaclesArray[0]).setScale(0.7);
+        this.obstacle.setImmovable(true);
+        this.obstacle.body.setAllowGravity(false);
+        this.obstacle.setVelocityX(this.cactusVelocity);
+        this.obstaclesGroup.add(this.obstacle); 
+    }
 }
