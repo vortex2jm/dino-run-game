@@ -11,8 +11,8 @@ export default class Menu extends Phaser.Scene {
 
     preload(){
 
+        this.load.image('background', './src/sprites/images/background2.png');
         this.load.image('back', './src/sprites/images/back.png');
-
     }
 
     create(){

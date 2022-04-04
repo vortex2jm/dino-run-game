@@ -10,15 +10,21 @@ export default class Pause extends Phaser.Scene {
 
     preload() {
 
+        //creating keys object
         this.keys = this.input.keyboard.createCursorKeys();
+
+        //loading images
+        this.load.image('background', './src/sprites/images/background2.png');
         this.load.image('home', './src/sprites/images/home.png');
         this.load.image('restart','./src/sprites/images/restart.png');
     }
 
     create() {
-        
+
+        //adding background
         this.add.image(500, 250, 'background');
 
+        //creating play/pause button and his actions
         const playPauseButton2 = this.add.image(500,250, 'button').setScale(0.1).setInteractive();
 
         playPauseButton2.on('pointerover', () => {playPauseButton2.setScale(0.12)});
@@ -28,6 +34,7 @@ export default class Pause extends Phaser.Scene {
             this.scene.stop();
         })
 
+        //creating buttons objects
         const home = this.add.image(900,410,'home').setScale(0.15).setInteractive();
         const restart = this.add.image(100,410,'restart').setScale(0.15).setInteractive();
 
@@ -48,11 +55,11 @@ export default class Pause extends Phaser.Scene {
             this.scene.stop('pause');
             this.scene.start('game');
         })
-
     }
 
     update(){
 
+        //SHIFT key unpause the game
         const kShift = this.keys.shift.isDown;
 
         if(kShift){
@@ -60,5 +67,5 @@ export default class Pause extends Phaser.Scene {
             this.scene.resume('game');
             this.scene.stop();
         }
-    };
+    }
 }

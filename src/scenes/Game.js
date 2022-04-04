@@ -8,6 +8,7 @@ export default class Game extends Phaser.Scene {
 
     init() {
 
+        //initializing preset vales
         this.score = 0;
         this.velocity = 1;
         this.velocity2 = 1;
@@ -25,6 +26,7 @@ export default class Game extends Phaser.Scene {
         this.load.spritesheet('dino', './src/sprites/images/spritesheet.png', {frameWidth: 460, frameHeight: 410});
         this.load.image('cactus', './src/sprites/images/cactus1.png');
 
+        //creating keys object
         this.keys = this.input.keyboard.createCursorKeys();
     }
     
@@ -127,12 +129,12 @@ export default class Game extends Phaser.Scene {
     }
 
     
-    updateScore() {
+    updateScore() { //updating score
         this.score++;
         this.scoreText.text = `Score: ${this.score}`;
     }
 
-    updateVelo() {
+    updateVelo() {  //updating velocities
 
         this.velocity += 3;
         this.velocity2 += 0.0001;
@@ -143,14 +145,14 @@ export default class Game extends Phaser.Scene {
         
         if(!this.obstacleExists){
 
-            let posXadd = Phaser.Math.Between(0,2000);
-            let rand = Phaser.Math.Between(1,2);
+            let posXadd = Phaser.Math.Between(0,2000); //valuue to add to X cacts position
+            let rand = Phaser.Math.Between(1,2);    //value to decide 1/2 cactus
 
-            if(rand == 1){
+            if(rand == 1){  //create only one cactus
 
-                this.createCactus(posXadd);
+                this.createCactus(posXadd); 
             }
-            else if(rand == 2){
+            else if(rand == 2){ //create two cactus
 
                 this.createCactus(posXadd);
                 this.createCactus(posXadd + 60);   
@@ -169,7 +171,7 @@ export default class Game extends Phaser.Scene {
         }
     }
 
-    createCactus(posXadd){
+    createCactus(posXadd){  //function to create and animate cactus
 
         this.obstacle = this.physics.add.sprite(1000 + posXadd, 310, this.obstaclesArray[0]).setScale(0.7);
         this.obstacle.setImmovable(true);

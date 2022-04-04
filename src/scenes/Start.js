@@ -15,8 +15,6 @@ export default class Start extends Phaser.Scene {
         this.load.image('background','./src/sprites/images/background2.png');
         this.load.spritesheet('dinoRun','./src/sprites/images/spritesheet.png',{frameWidth: 460, frameHeight:410});
         this.load.image('menu', './src/sprites/images/menu.png');
-
-        this.load.audio('startMusic', './src/sprites/sounds/startMusic.mp3');
     }
 
     create() {
@@ -41,7 +39,7 @@ export default class Start extends Phaser.Scene {
             repeat: -1
         })
 
-        //creating button
+        //creating start button and his actions
         const spaceButton = this.add.image(width/2, 125 , 'spaceButton').setScale(0.45).setInteractive();
         spaceButton.on('pointerdown', () => {
 
@@ -49,13 +47,12 @@ export default class Start extends Phaser.Scene {
             this.scene.start('game');
         })
 
+        //creating menu button and his actions
         const menu = this.add.image(70,430,'menu').setScale(0.15).setInteractive();
         menu.on('pointerover', () => {menu.setScale(0.2)});
         menu.on('pointerout', () => {menu.setScale(0.15)});
         menu.on('pointerdown', () => {this.scene.stop(), this.scene.start('menu')});
         
-
-
         //adding text
         this.add.text(500, 50, 'Press SPACE to start', style).setOrigin(0.5);
 
