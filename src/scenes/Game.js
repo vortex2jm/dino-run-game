@@ -115,13 +115,6 @@ export default class Game extends Phaser.Scene {
             this.dino.anims.play("run", true);
         }
 
-        //dino jump when clicks on mouse
-        this.input.on('pointerdown', () => {
-
-            this.dino.setVelocityY(-600);
-            this.dino.anims.play("jump",true);
-        })
-        
         //adding key yo pause the game
         if(kShift){
 
