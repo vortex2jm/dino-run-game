@@ -15,6 +15,8 @@ export default class Start extends Phaser.Scene {
         this.load.image('background','./src/sprites/images/background2.png');
         this.load.spritesheet('dinoRun','./src/sprites/images/spritesheet.png',{frameWidth: 460, frameHeight:410});
         this.load.image('menu', './src/sprites/images/menu.png');
+
+        this.load.audio('music', './src/sprites/sounds/Happy walk.mp3');
     }
 
     create() {
@@ -24,7 +26,7 @@ export default class Start extends Phaser.Scene {
         const style = { color: '#000000',fontSize: 24 };
         
         //playing music
-        this.sound.play('startMusic');
+        this.sound.play('music');
 
         //adding background
         this.add.image(width/2, height/2, 'background');
@@ -43,7 +45,7 @@ export default class Start extends Phaser.Scene {
         const spaceButton = this.add.image(width/2, 125 , 'spaceButton').setScale(0.45).setInteractive();
         spaceButton.on('pointerdown', () => {
 
-            this.sound.stopAll();
+            // this.sound.stopAll();
             this.scene.start('game');
         })
 
