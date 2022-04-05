@@ -26,7 +26,7 @@ export default class Start extends Phaser.Scene {
         const style = { color: '#000000',fontSize: 24 };
         
         //playing music
-        this.sound.play('music');
+        // this.sound.play('music');
 
         //adding background
         this.add.image(width/2, height/2, 'background');
