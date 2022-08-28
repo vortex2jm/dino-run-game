@@ -3,20 +3,18 @@ import Phaser from '../lib/phaser.js'
 export default class Menu extends Phaser.Scene {
 
     constructor(){
-
         super('menu');
     }
 
     init(){};
 
     preload(){
-
         this.load.image('background', './src/sprites/images/background2.png');
         this.load.image('back', './src/sprites/images/back.png');
     }
 
     create(){
-
+        
         const style = { color: '#000000',fontSize: 24};
         const {width, height} = this.scale;
 

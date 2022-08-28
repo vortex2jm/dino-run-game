@@ -3,14 +3,12 @@ import Phaser from "../lib/phaser.js"
 export default class Pause extends Phaser.Scene{
 
     constructor(){
-
         super('pause');
     }
 
     init(){};
 
     preload(){
-
         //loading images
         this.load.image('background', './src/sprites/images/background2.png');
         this.load.image('home', './src/sprites/images/home.png');
@@ -45,6 +43,7 @@ export default class Pause extends Phaser.Scene{
             this.scene.stop('game');
             this.scene.stop('pause');
             this.scene.start('start');
+            this.game.sound.stopAll();
         })
 
         const restart = this.add.image(100, 410, 'restart').setScale(0.15).setInteractive();
@@ -54,16 +53,15 @@ export default class Pause extends Phaser.Scene{
             this.scene.stop('game');
             this.scene.stop('pause');
             this.scene.start('game');
+            this.game.sound.stopAll();
         })
     }
 
     update(){
-
         //creating action to shift key
         const kShift = this.keys.shift.isDown;
 
         if(kShift){
-
             this.scene.resume('game');
             this.scene.stop();
         }

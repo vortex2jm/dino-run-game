@@ -15,19 +15,18 @@ export default class Start extends Phaser.Scene {
         this.load.image('background','./src/sprites/images/background2.png');
         this.load.spritesheet('dinoRun','./src/sprites/images/spritesheet.png',{frameWidth: 460, frameHeight:410});
         this.load.image('menu', './src/sprites/images/menu.png');
-
-        this.load.audio('music', './src/sprites/sounds/Happy walk.mp3');
+        this.load.audio('music', './src/sprites/sounds/startMusic.mp3');
     }
 
     create() {
+
+        this.music = this.sound.add('music', {loop: true, volume: 0.2});
+        this.music.play();
 
         //standard data
         const {width, height} = this.scale; 
         const style = { color: '#000000',fontSize: 24 };
         
-        //playing music
-        // this.sound.play('music');
-
         //adding background
         this.add.image(width/2, height/2, 'background');
 
@@ -44,9 +43,8 @@ export default class Start extends Phaser.Scene {
         //creating start button and his actions
         const spaceButton = this.add.image(width/2, 125 , 'spaceButton').setScale(0.45).setInteractive();
         spaceButton.on('pointerdown', () => {
-
-            // this.sound.stopAll();
             this.scene.start('game');
+            this.game.sound.stopAll();
         })
 
         //creating menu button and his actions
@@ -60,8 +58,8 @@ export default class Start extends Phaser.Scene {
 
         //intializing game by keyboard
         this.input.keyboard.once('keydown-SPACE', () => {
-            this.sound.stopAll(); 
             this.scene.start('game');
+            this.game.sound.stopAll();
         })
 
         //button animation
@@ -73,9 +71,7 @@ export default class Start extends Phaser.Scene {
         },500);
     }
 
-
     update(){
-
         //running dino animation
         this.dino.anims.play("run", true);
     };

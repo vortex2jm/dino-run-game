@@ -7,21 +7,23 @@ export default class Game extends Phaser.Scene{
     }
 
     init(data){
-        
         //getting data from other scene
         this.scoreFinal = data.score;
     };
 
     preload(){
-        
         //loading images
         this.load.image('background', './src/sprites/images/background2.png');
         this.load.image('gameOver', './src/sprites/images/gameOver.png');
         this.load.image('home', './src/sprites/images/home.png');
         this.load.image('restart','./src/sprites/images/restart.png');
+        this.load.audio('gameoveraudio', './src/sprites/sounds/trombone.wav');
     }
 
     create(){
+
+        this.gameOverAudio = this.sound.add('gameoveraudio', {loop: false, volume: 0.1});
+        this.gameOverAudio.play();
 
         //standard data
         const {width , height} = this.scale;
@@ -45,6 +47,7 @@ export default class Game extends Phaser.Scene{
             this.scene.stop('game');
             this.scene.stop('pause');
             this.scene.start('start');
+            this.game.sound.stopAll();
         });
 
         //restart button actions
@@ -54,6 +57,7 @@ export default class Game extends Phaser.Scene{
             this.scene.stop('game');
             this.scene.stop('pause');
             this.scene.start('game');
+            this.game.sound.stopAll();
         })
     }
 
